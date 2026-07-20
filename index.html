@@ -51,34 +51,60 @@
   .hidden{display:none!important;}
   .footer{position:fixed;bottom:8px;left:0;right:0;text-align:center;color:#39424f;font-size:11px;letter-spacing:.08em;z-index:4;}
 
-  /* ---------- Controles táctiles (celular / tablet) ---------- */
+  /* ---------- Pantalla de dispositivo ---------- */
+  .plat-q{font-size:clamp(16px,3vw,22px);color:#e8ecf2;letter-spacing:.08em;margin-top:2px;}
+  .plat-choices{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;}
+  .platbtn{display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;width:min(270px,82vw);
+    padding:26px 20px;border-radius:16px;border:1.5px solid #2a3444;background:var(--panel);color:#e8ecf2;
+    font-family:inherit;transition:.14s;box-shadow:0 14px 40px rgba(0,0,0,.4);}
+  .platbtn:hover,.platbtn:focus{transform:translateY(-3px);border-color:var(--neon);box-shadow:0 0 24px rgba(78,230,168,.4);outline:none;}
+  .platbtn .pi{font-size:54px;line-height:1;}
+  .platbtn b{font-size:19px;letter-spacing:.06em;text-transform:uppercase;}
+  .platbtn small{color:#8b95a3;font-size:12px;line-height:1.6;}
+  .platbtn.suggest{border-color:var(--gold);box-shadow:0 0 22px rgba(255,207,74,.32);}
+  .plat-hint{color:#7c8695;font-size:12px;letter-spacing:.04em;min-height:1em;}
+  body.mobile .footer{display:none;}
+
+  /* ---------- Controles táctiles (celular) ---------- */
   .tc-only{display:none;}
-  body.touch .tc-only{display:flex;}
+  body.mobile .tc-only{display:flex;}
+  body.mobile .row:has([data-key="vsmode"]),
+  body.mobile .row:has([data-key="players"]),
+  body.mobile .row:has([data-key="p1ctrl"]),
+  body.mobile .row:has([data-key="p2ctrl"]),
+  body.mobile #padStatus,
+  body.mobile .controls-help:not(.tc-only){display:none!important;}
   #touch{position:fixed;inset:0;z-index:8;pointer-events:none;display:none;}
-  body.touch #touch.show{display:block;}
+  body.mobile #touch.show{display:block;}
   #touch .tbtn{position:absolute;pointer-events:auto;touch-action:none;-webkit-user-select:none;user-select:none;
     -webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:center;
-    background:rgba(18,24,36,.5);border:1.5px solid rgba(120,140,165,.4);color:#cfd8e4;font-family:inherit;
-    font-weight:700;border-radius:12px;backdrop-filter:blur(2px);transition:background .05s,transform .05s;}
-  #touch .tbtn.act{background:rgba(78,230,168,.85);color:#05130d;border-color:#4ee6a8;transform:scale(.93);}
-  #touch .dpad{position:absolute;bottom:calc(14px + env(safe-area-inset-bottom));width:168px;height:168px;}
-  #touch .dpad.p1{left:calc(14px + env(safe-area-inset-left));}
-  #touch .dpad.p2{right:calc(14px + env(safe-area-inset-right));}
-  #touch .dpad .tbtn{width:56px;height:56px;font-size:22px;line-height:1;}
-  #touch .dpad .up{left:56px;top:0;} #touch .dpad .down{left:56px;top:112px;}
-  #touch .dpad .left{left:0;top:56px;} #touch .dpad .right{left:112px;top:56px;}
-  #touch .fire{width:96px;height:96px;border-radius:50%;font-size:14px;letter-spacing:.04em;
-    background:rgba(255,93,93,.5);border-color:rgba(255,140,140,.6);color:#fff;
+    background:rgba(18,24,36,.5);border:2px solid rgba(120,140,165,.42);color:#eaf1f8;font-family:inherit;
+    font-weight:700;border-radius:14px;backdrop-filter:blur(2px);transition:background .05s,transform .05s;}
+  #touch .tbtn.act{background:rgba(78,230,168,.9);color:#05130d;border-color:#4ee6a8;transform:scale(.92);}
+  #touch .dpad{position:absolute;bottom:calc(16px + env(safe-area-inset-bottom));width:192px;height:192px;}
+  #touch .dpad.p1{left:calc(16px + env(safe-area-inset-left));}
+  #touch .dpad.p2{right:calc(16px + env(safe-area-inset-right));}
+  #touch .dpad .tbtn{width:64px;height:64px;font-size:24px;line-height:1;}
+  #touch .dpad .up{left:64px;top:0;} #touch .dpad .down{left:64px;top:128px;}
+  #touch .dpad .left{left:0;top:64px;} #touch .dpad .right{left:128px;top:64px;}
+  #touch .fire{width:112px;height:112px;border-radius:50%;font-size:15px;letter-spacing:.04em;
+    background:rgba(255,93,93,.5);border-color:rgba(255,140,140,.62);color:#fff;
     bottom:calc(30px + env(safe-area-inset-bottom));}
-  #touch .fire.act{background:rgba(255,93,93,.95);color:#fff;border-color:#ff5d5d;}
-  #touch .fire.p1{right:calc(24px + env(safe-area-inset-right));}
-  #touch .fire.p2{left:calc(24px + env(safe-area-inset-left));}
-  #touch .pausebtn{top:calc(6px + env(safe-area-inset-top));right:calc(58px + env(safe-area-inset-right));
-    width:44px;height:44px;font-size:16px;letter-spacing:.1em;border-radius:10px;}
-  /* Layout dos jugadores: fuego hacia el centro, dpad en cada esquina */
-  body.tc-2p #touch .fire{width:82px;height:82px;font-size:12px;bottom:calc(34px + env(safe-area-inset-bottom));}
-  body.tc-2p #touch .fire.p1{left:calc(190px + env(safe-area-inset-left));right:auto;}
-  body.tc-2p #touch .fire.p2{right:calc(190px + env(safe-area-inset-right));left:auto;}
+  #touch .fire.act{background:rgba(255,93,93,.96);color:#fff;border-color:#ff5d5d;}
+  #touch .fire.p1{right:calc(26px + env(safe-area-inset-right));}
+  #touch .fire.p2{left:calc(26px + env(safe-area-inset-left));}
+  #touch .ability{display:none;width:78px;height:78px;border-radius:50%;font-size:32px;color:#4ee6a8;
+    bottom:calc(158px + env(safe-area-inset-bottom));right:calc(43px + env(safe-area-inset-right));}
+  body.mobile #touch.show .ability{display:flex;}
+  #touch .ability.ready{background:rgba(78,230,168,.92)!important;color:#05130d;border-color:#4ee6a8;
+    box-shadow:0 0 20px rgba(78,230,168,.75);animation:abpulse 1s infinite;}
+  @keyframes abpulse{0%,100%{transform:scale(1);}50%{transform:scale(1.08);}}
+  #touch .pausebtn{top:calc(8px + env(safe-area-inset-top));right:calc(10px + env(safe-area-inset-right));
+    width:46px;height:46px;font-size:16px;letter-spacing:.1em;border-radius:12px;}
+  /* Layout dos jugadores (solo PC con pantalla táctil): fuego hacia el centro */
+  body.tc-2p #touch .fire{width:90px;height:90px;font-size:12px;bottom:calc(34px + env(safe-area-inset-bottom));}
+  body.tc-2p #touch .fire.p1{left:calc(210px + env(safe-area-inset-left));right:auto;}
+  body.tc-2p #touch .fire.p2{right:calc(210px + env(safe-area-inset-right));left:auto;}
   body.tc-1p #touch .p2{display:none!important;}
 </style>
 </head>
@@ -88,8 +114,26 @@
 <div id="scan"></div>
 <div class="footer">Abrí este archivo en el navegador · doble clic · funciona sin conexión</div>
 
+<!-- ===================== ELEGIR DISPOSITIVO ===================== -->
+<div id="platformScreen" class="overlay">
+  <h1 class="title">BATALLA DE <span class="b">TANQUES</span></h1>
+  <div class="subtitle">Arcade</div>
+  <div class="plat-q">¿Dónde vas a jugar?</div>
+  <div class="plat-choices">
+    <button class="platbtn" id="platPC">
+      <span class="pi">💻</span><b>Computadora</b>
+      <small>Teclado o mando<br>1 y 2 jugadores</small>
+    </button>
+    <button class="platbtn" id="platMobile">
+      <span class="pi">📱</span><b>Celular</b>
+      <small>Controles táctiles · 1 jugador<br>con habilidad ⚡ y auto-disparo</small>
+    </button>
+  </div>
+  <div class="plat-hint" id="platHint"></div>
+</div>
+
 <!-- ===================== MENÚ ===================== -->
-<div id="menu" class="overlay">
+<div id="menu" class="overlay hidden">
   <h1 class="title">BATALLA DE <span class="b">TANQUES</span></h1>
   <div class="subtitle">Arcade · Versus y Oleadas cooperativas</div>
 
@@ -197,6 +241,7 @@
   <div class="actions">
     <button class="btn play" id="playBtn">Jugar ►</button>
     <button class="btn ghost" id="fsBtn">Pantalla completa</button>
+    <button class="btn ghost" id="changePlat">◂ Cambiar dispositivo</button>
   </div>
 
   <div class="controls-help">
@@ -204,7 +249,7 @@
     <div class="j2"><b>Jugador 2</b> · mover ← ↑ → ↓ · disparar Enter</div>
   </div>
   <div class="controls-help" id="padStatus" style="color:#7c8695">🎮 Buscando mandos…</div>
-  <div class="controls-help tc-only" style="color:#7c8695">📱 <b style="color:var(--neon)">Celular</b> · usá los controles en pantalla: D-pad para mover · FUEGO para disparar · II para pausar</div>
+  <div class="controls-help tc-only" style="color:#7c8695">📱 <b style="color:var(--neon)">Celular</b> · D-pad para mover · dispara solo (auto-disparo) · <b style="color:var(--neon)">⚡</b> habilidad Sobrecarga al cargarse · II para pausar</div>
   <div class="powhint" id="powHint"></div>
 </div>
 
@@ -224,6 +269,7 @@
     <button class="tbtn left"  data-p="2" data-dir="3">◀</button>
   </div>
   <button class="tbtn fire p2" data-p="2">FUEGO</button>
+  <button class="tbtn ability" id="tcAbility" title="Habilidad especial">⚡</button>
   <button class="tbtn pausebtn" id="tcPause">II</button>
 </div>
 
@@ -274,7 +320,7 @@ const CONFIG = {
     basic: {hp:1, speedMul:1.00, fireMul:1.0, bulletMul:1.00, color:'#c2cad6', dark:'#5a6472', points:100, name:'Básico'},
     fast:  {hp:1, speedMul:1.75, fireMul:1.0, bulletMul:1.25, color:'#5fd6ff', dark:'#256f9c', points:200, name:'Rápido'},
     gunner:{hp:2, speedMul:1.05, fireMul:2.3, bulletMul:1.55, color:'#ff8a5c', dark:'#9c4526', points:300, name:'Artillero'},
-    heavy: {hp:4, speedMul:0.62, fireMul:0.9, bulletMul:1.00, color:'#9ad06b', dark:'#41631f', points:400, name:'Pesado'}
+    heavy: {hp:2, speedMul:0.62, fireMul:0.9, bulletMul:1.00, color:'#9ad06b', dark:'#41631f', points:400, name:'Pesado'}
   },
 
   // Ajustes del modo Oleadas
@@ -384,7 +430,11 @@ const game={
 
 const settings={gamemode:'versus', vsmode:'2p', players:'1', diff:'normal',
   speed:'normal', map:'0', bestof:'3', wavesCount:'5', maporder:'order',
-  p1ctrl:'kb', p2ctrl:'kb'};
+  p1ctrl:'kb', p2ctrl:'kb', autofire:'on'};
+
+// Plataforma elegida al inicio ('pc' | 'mobile') y habilidad especial (solo móvil)
+let PLATFORM=null;
+const ability={charge:0, max:100};
 
 /* ============================================================
    AUDIO
@@ -463,11 +513,11 @@ function pollGamepad(idx){ const gps=navigator.getGamepads?navigator.getGamepads
 window.addEventListener('gamepadconnected',updatePadStatus);
 window.addEventListener('gamepaddisconnected',updatePadStatus);
 
-/* ---------- Controles táctiles (celular / tablet) ---------- */
+/* ---------- Controles táctiles (celular) ---------- */
 const IS_TOUCH = ('ontouchstart' in window) || navigator.maxTouchPoints>0 ||
   (window.matchMedia&&window.matchMedia('(pointer:coarse)').matches);
-if(IS_TOUCH) document.body.classList.add('touch');
 const touchLayer=document.getElementById('touch');
+function isMobile(){ return document.body.classList.contains('mobile'); }
 function tcSetDir(p,dir,on){ const arr=heldDirs[p];
   if(on){ if(!arr.includes(dir)) arr.push(dir); } else { heldDirs[p]=arr.filter(d=>d!==dir); } }
 function tcBind(btn,onDown,onUp){
@@ -484,9 +534,49 @@ document.querySelectorAll('#touch .dpad .tbtn').forEach(btn=>{ const p=+btn.data
 document.querySelectorAll('#touch .fire').forEach(btn=>{ const p=+btn.dataset.p;
   tcBind(btn,()=>{shootHeld[p]=true;},()=>{shootHeld[p]=false;}); });
 document.getElementById('tcPause').addEventListener('pointerdown',e=>{ e.preventDefault(); togglePause(); });
-function syncTouchUI(){ if(!IS_TOUCH) return;
+document.getElementById('tcAbility').addEventListener('pointerdown',e=>{ e.preventDefault(); AudioFX.init(); activateAbility(); });
+
+// Habilidad especial (solo móvil): Sobrecarga — escudo + disparo rápido/triple + veloz y limpia balas enemigas
+function activateAbility(){ if(!isMobile()||state!=='playing'||ability.charge<ability.max) return;
+  const t=tanks.find(o=>o.kind==='player'&&o.player===1); if(!t) return;
+  ability.charge=0;
+  t.pow.shield=Math.max(t.pow.shield,5); t.pow.rapid=Math.max(t.pow.rapid,7);
+  t.pow.triple=Math.max(t.pow.triple,7); t.pow.speed=Math.max(t.pow.speed,6);
+  bullets=bullets.filter(b=>b.team!=='enemy');
+  screenFlash=.55; addFloat(t.x,t.y,'¡SOBRECARGA!','#4ee6a8');
+  for(let i=0;i<26;i++) particles.push({x:t.x,y:t.y,vx:rand(-200,200),vy:rand(-200,200),life:.6,max:.6,size:rand(2,5),color:'#4ee6a8',fade:true});
+  particles.push({ring:true,x:t.x,y:t.y,life:.5,max:.5,r:10,color:'#4ee6a8'});
+  if(C.SOUND){ AudioFX.pickup(); AudioFX.bigboom(); }
+}
+function updateAbilityUI(){ const btn=document.getElementById('tcAbility'); if(!btn) return;
+  const pct=Math.max(0,Math.min(100,Math.round(ability.charge/ability.max*100))), ready=ability.charge>=ability.max;
+  btn.classList.toggle('ready',ready);
+  btn.style.background = ready ? '' : `conic-gradient(rgba(78,230,168,.85) ${pct}%, rgba(18,24,36,.5) ${pct}%)`;
+}
+function syncTouchUI(){ if(!isMobile()){ touchLayer.classList.remove('show'); return; }
   const active=(state==='playing'||state==='countdown'||state==='paused'||state==='roundover'||state==='waveclear');
-  touchLayer.classList.toggle('show',active); }
+  touchLayer.classList.toggle('show',active);
+  if(active) updateAbilityUI();
+}
+
+/* ---------- Selección de dispositivo ---------- */
+function setSeg(key,val){ const seg=document.querySelector('.seg[data-key="'+key+'"]'); settings[key]=val;
+  if(!seg) return; seg.querySelectorAll('button').forEach(b=>b.classList.toggle('on', b.dataset.val===val)); }
+function choosePlatform(p){ PLATFORM=p; AudioFX.init();
+  document.body.classList.toggle('mobile',p==='mobile');
+  document.body.classList.toggle('pc',p==='pc');
+  if(p==='mobile'){ setSeg('vsmode','cpu'); setSeg('players','1'); setSeg('diff','easy'); }
+  updateMenuVisibility(); hide('platformScreen'); show('menu');
+}
+document.getElementById('platPC').addEventListener('click',()=>choosePlatform('pc'));
+document.getElementById('platMobile').addEventListener('click',()=>choosePlatform('mobile'));
+document.getElementById('changePlat').addEventListener('click',()=>{ hide('menu'); show('platformScreen'); });
+(function initPlat(){ const hint=document.getElementById('platHint');
+  if(IS_TOUCH){ document.getElementById('platMobile').classList.add('suggest');
+    hint.textContent='📱 Detectamos una pantalla táctil — te recomendamos “Celular”.'; }
+  else { document.getElementById('platPC').classList.add('suggest');
+    hint.textContent='Elegí una opción para empezar.'; }
+})();
 
 /* ============================================================
    MENÚ / UI
@@ -540,6 +630,7 @@ function togglePause(){ if(state==='playing'||state==='countdown'){ state='pause
    ============================================================ */
 function startGame(){ hide('menu'); hide('matchScreen'); hide('pauseScreen');
   heldDirs[1]=[]; heldDirs[2]=[]; shootHeld[1]=false; shootHeld[2]=false;
+  ability.charge=0;
   document.body.classList.toggle('tc-2p', isP2Human());
   document.body.classList.toggle('tc-1p', !isP2Human());
   if(settings.gamemode==='versus') startVersus(); else startWaves();
@@ -759,10 +850,13 @@ function update(dt){
     if(t.kind==='enemy'){ updateEnemyAI(t,dt); dir=t.ai.dir; wantShoot=t.ai.shoot; }
     else if(t.isCPU){ updateVersusCPU(t,dt); dir=t.ai.dir; wantShoot=t.ai.shoot; }
     else{ dir=currentDir(t.player); wantShoot=shootHeld[t.player];
-      const gi=resolvePadIndex(t.player); if(gi!=null){ const gp=pollGamepad(gi); if(gp){ if(gp.dir>=0) dir=gp.dir; if(gp.shoot) wantShoot=true; } } }
+      const gi=resolvePadIndex(t.player); if(gi!=null){ const gp=pollGamepad(gi); if(gp){ if(gp.dir>=0) dir=gp.dir; if(gp.shoot) wantShoot=true; } }
+      if(isMobile()&&settings.autofire==='on'&&t.player===1) wantShoot=true; }
     if(dir>=0){ t.dir=dir; let spd=t.preset.tank*(t.pow.speed>0?1.6:1); if(t.kind==='enemy') spd*=C.ENEMY_TYPES[t.etype].speedMul; moveTank(t,dir,spd*dt); }
     t.cooldown-=dt; if(wantShoot&&t.cooldown<=0) fire(t);
   }
+
+  if(isMobile()) ability.charge=Math.min(ability.max, ability.charge + dt*(ability.max/16));
 
   if(game.mode==='waves'){ updateSpawner(dt); updateFortify(dt); }
 
@@ -793,7 +887,9 @@ function update(dt){
     for(const t of tanks){ if(t.spawnAnim>0) continue; if(t.kind==='enemy') continue; // solo jugadores recogen
       if(Math.abs(t.x-p.x)<TILE*.6&&Math.abs(t.y-p.y)<TILE*.6){ applyPowerup(t,p.key); powerups.splice(i,1); break; } } }
 
-  for(let i=particles.length-1;i>=0;i--){ const pa=particles[i]; pa.x+=pa.vx*dt; pa.y+=pa.vy*dt; pa.vx*=.92; pa.vy*=.92; pa.life-=dt; if(pa.life<=0) particles.splice(i,1); }
+  for(let i=particles.length-1;i>=0;i--){ const pa=particles[i];
+    if(pa.ring){ pa.r+=300*dt; pa.life-=dt; if(pa.life<=0) particles.splice(i,1); continue; }
+    pa.x+=pa.vx*dt; pa.y+=pa.vy*dt; pa.vx*=.92; pa.vy*=.92; pa.life-=dt; if(pa.life<=0) particles.splice(i,1); }
   for(let i=floatTexts.length-1;i>=0;i--){ const f=floatTexts[i]; f.y-=28*dt; f.life-=dt; if(f.life<=0) floatTexts.splice(i,1); }
   if(screenFlash>0) screenFlash-=dt*2.5;
 }
@@ -826,6 +922,7 @@ function hitTank(t,b){ if(t.kind==='enemy'){ t.hp-=1; if(t.hp<=0) killEnemy(t); 
 function respawnPlayer(t){ t.x=t.spawn.x; t.y=t.spawn.y; t.dir=t.spawn.dir; t.pow.shield=C.RESPAWN_SHIELD; t.spawnFlash=.6; t.frozen=0; t.hp=1; }
 function removeTank(t){ const i=tanks.indexOf(t); if(i>=0) tanks.splice(i,1); }
 function killEnemy(t){ explosion(t.x,t.y,t.color); if(C.SOUND) AudioFX.explosion();
+  if(isMobile()) ability.charge=Math.min(ability.max, ability.charge+18);
   game.teamScore+=C.ENEMY_TYPES[t.etype].points; addFloat(t.x,t.y,'+'+C.ENEMY_TYPES[t.etype].points,'#ffe14a');
   if(t.carrier) dropSpecial(t.x,t.y); removeTank(t);
   const alive=tanks.filter(x=>x.kind==='enemy').length; if(game.waveQueue.length===0&&alive===0) waveClear();
@@ -885,6 +982,7 @@ function addFloat(x,y,txt,color){ floatTexts.push({x,y,txt,color,life:1.1}); }
    ============================================================ */
 function rand(a,b){ return a+Math.random()*(b-a); }
 function explosion(x,y,color){ const cols=['#fff2b0','#ffce4a','#ff8a2b','#ff4d3d','#7a7f88',color];
+  particles.push({ring:true,x,y,life:.32,max:.32,r:6,color:'#ffe6a8'});
   for(let i=0;i<26;i++){ const a=Math.random()*Math.PI*2, sp=rand(40,260); particles.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:rand(.3,.7),max:.7,size:rand(2,5),color:cols[(Math.random()*cols.length)|0],fade:true}); } }
 function spark(x,y,color){ for(let i=0;i<7;i++){ const a=Math.random()*Math.PI*2, sp=rand(30,140); particles.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:rand(.15,.35),max:.35,size:rand(1.5,3),color,fade:true}); } }
 function brickDebris(x,y){ for(let i=0;i<6;i++){ const a=Math.random()*Math.PI*2, sp=rand(20,110); particles.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:rand(.2,.4),max:.4,size:rand(2,4),color:'#b5563a',fade:true}); } }
@@ -900,7 +998,7 @@ function resize(){ view.dpr=window.devicePixelRatio||1; view.cssW=window.innerWi
 }
 window.addEventListener('resize',resize); document.addEventListener('fullscreenchange',resize);
 
-function render(){ ctx.setTransform(view.dpr,0,0,view.dpr,0,0); ctx.clearRect(0,0,view.cssW,view.cssH);
+function render(){ ctx.setTransform(view.dpr,0,0,view.dpr,0,0); ensureGradients(); ctx.clearRect(0,0,view.cssW,view.cssH);
   ctx.fillStyle='#04060a'; ctx.fillRect(0,0,view.cssW,view.cssH);
   if(state==='menu') return;
   ctx.save(); ctx.translate(view.ox,view.oy); ctx.scale(view.scale,view.scale);
@@ -913,8 +1011,16 @@ function render(){ ctx.setTransform(view.dpr,0,0,view.dpr,0,0); ctx.clearRect(0,
   if(state==='waveclear') drawBanner('¡Oleada superada!', game.wave<game.totalWaves?('Prepárate para la oleada '+(game.wave+1)):'¡Última oleada!');
   if(state==='roundover') drawBanner('¡Punto!', game.score[0]+' — '+game.score[1]);
 }
-function drawArenaBg(){ const g=ctx.createRadialGradient(ARENA_W/2,ARENA_H/2,ARENA_H*0.2,ARENA_W/2,ARENA_H/2,ARENA_H*0.75);
-  g.addColorStop(0,'#0e1420'); g.addColorStop(1,'#080b12'); ctx.fillStyle=g; ctx.fillRect(0,0,ARENA_W,ARENA_H);
+// Gradientes cacheados (se crean una vez; evita recalcular por tile y por frame)
+const GRAD={steel:null,water:null,arena:null};
+function ensureGradients(){ if(GRAD.steel) return;
+  GRAD.steel=ctx.createLinearGradient(0,0,TILE,TILE);
+  GRAD.steel.addColorStop(0,'#9fadbe'); GRAD.steel.addColorStop(.5,'#606a79'); GRAD.steel.addColorStop(1,'#39414d');
+  GRAD.water=ctx.createLinearGradient(0,0,0,TILE);
+  GRAD.water.addColorStop(0,'#12507e'); GRAD.water.addColorStop(1,'#0d3255');
+  GRAD.arena=ctx.createRadialGradient(ARENA_W/2,ARENA_H/2,ARENA_H*0.2,ARENA_W/2,ARENA_H/2,ARENA_H*0.75);
+  GRAD.arena.addColorStop(0,'#0e1420'); GRAD.arena.addColorStop(1,'#080b12'); }
+function drawArenaBg(){ ctx.fillStyle=GRAD.arena; ctx.fillRect(0,0,ARENA_W,ARENA_H);
   ctx.strokeStyle='rgba(255,255,255,.03)'; ctx.lineWidth=1;
   for(let c=1;c<COLS;c++){ ctx.beginPath(); ctx.moveTo(c*TILE,0); ctx.lineTo(c*TILE,ARENA_H); ctx.stroke(); }
   for(let r=1;r<ROWS;r++){ ctx.beginPath(); ctx.moveTo(0,r*TILE); ctx.lineTo(ARENA_W,r*TILE); ctx.stroke(); } }
@@ -927,18 +1033,28 @@ function drawBrickQuad(x,y,w){ ctx.fillStyle='#7a2f1e'; ctx.fillRect(x,y,w,w);
   ctx.strokeStyle='rgba(0,0,0,.32)'; ctx.lineWidth=1; ctx.strokeRect(x+.5,y+.5,w-1,w-1); }
 function drawBrick(x,y,cell){ const s=cell.sub, h=TILE/2;
   if(s[0]) drawBrickQuad(x,y,h); if(s[1]) drawBrickQuad(x+h,y,h); if(s[2]) drawBrickQuad(x,y+h,h); if(s[3]) drawBrickQuad(x+h,y+h,h); }
-function drawSteel(x,y){ const g=ctx.createLinearGradient(x,y,x+TILE,y+TILE);
-  g.addColorStop(0,'#96a3b5'); g.addColorStop(.5,'#606a79'); g.addColorStop(1,'#3d4552'); ctx.fillStyle=g; ctx.fillRect(x,y,TILE,TILE);
-  ctx.fillStyle='rgba(255,255,255,.2)'; ctx.fillRect(x+3,y+3,TILE-6,3);
-  ctx.strokeStyle='#2a303a'; ctx.lineWidth=2; ctx.strokeRect(x+1,y+1,TILE-2,TILE-2);
-  ctx.fillStyle='#2a303a'; const b=4; ctx.fillRect(x+3,y+3,b,b); ctx.fillRect(x+TILE-3-b,y+3,b,b); ctx.fillRect(x+3,y+TILE-3-b,b,b); ctx.fillRect(x+TILE-3-b,y+TILE-3-b,b,b); }
-function drawWater(x,y,time,r,c){ const g=ctx.createLinearGradient(x,y,x,y+TILE); g.addColorStop(0,'#12507e'); g.addColorStop(1,'#0d3255'); ctx.fillStyle=g; ctx.fillRect(x,y,TILE,TILE);
+function drawSteel(x,y){ ctx.save(); ctx.translate(x,y);
+  ctx.fillStyle=GRAD.steel; ctx.fillRect(0,0,TILE,TILE);
+  ctx.fillStyle='rgba(255,255,255,.22)'; ctx.fillRect(3,3,TILE-6,3);
+  ctx.strokeStyle='#252b34'; ctx.lineWidth=2; ctx.strokeRect(1,1,TILE-2,TILE-2);
+  ctx.strokeStyle='rgba(255,255,255,.08)'; ctx.lineWidth=1; ctx.strokeRect(4,4,TILE-8,TILE-8);
+  ctx.fillStyle='#252b34'; const b=4; ctx.fillRect(3,3,b,b); ctx.fillRect(TILE-3-b,3,b,b); ctx.fillRect(3,TILE-3-b,b,b); ctx.fillRect(TILE-3-b,TILE-3-b,b,b);
+  ctx.restore(); }
+function drawWater(x,y,time,r,c){ ctx.save(); ctx.translate(x,y);
+  ctx.fillStyle=GRAD.water; ctx.fillRect(0,0,TILE,TILE);
   ctx.strokeStyle='rgba(140,210,255,.4)'; ctx.lineWidth=2;
-  for(let i=0;i<2;i++){ const yy=y+TILE*(.35+i*.35)+Math.sin(time*2+c+i)*2; ctx.beginPath();
-    for(let xx=0;xx<=TILE;xx+=6){ const py=yy+Math.sin((xx/TILE)*6+time*3+r)*1.6; if(xx===0) ctx.moveTo(x+xx,py); else ctx.lineTo(x+xx,py); } ctx.stroke(); } }
-function drawBush(x,y){ ctx.fillStyle='#1f6b34'; ctx.fillRect(x,y,TILE,TILE); ctx.fillStyle='#2f9048';
-  for(let i=0;i<8;i++){ const px=x+rand(3,TILE-8), py=y+rand(3,TILE-8); ctx.fillRect(px,py,rand(4,9),rand(4,9)); }
-  ctx.fillStyle='rgba(0,0,0,.16)'; ctx.fillRect(x,y,TILE,TILE); }
+  for(let i=0;i<2;i++){ const yy=TILE*(.35+i*.35)+Math.sin(time*2+c+i)*2; ctx.beginPath();
+    for(let xx=0;xx<=TILE;xx+=6){ const py=yy+Math.sin((xx/TILE)*6+time*3+r)*1.6; if(xx===0) ctx.moveTo(xx,py); else ctx.lineTo(xx,py); } ctx.stroke(); }
+  ctx.restore(); }
+// PRNG determinista por casilla: el arbusto ya no parpadea y cuesta menos
+function tileRand(a,b){ let h=(((a+7)*73856093)^((b+11)*19349663))>>>0;
+  return ()=>{ h=(h*1664525+1013904223)>>>0; return h/4294967296; }; }
+function drawBush(x,y){ ctx.save(); ctx.translate(x,y);
+  ctx.fillStyle='#1f6b34'; ctx.fillRect(0,0,TILE,TILE);
+  const rnd=tileRand((x/TILE)|0,(y/TILE)|0);
+  ctx.fillStyle='#2f9048'; for(let i=0;i<8;i++){ const px=3+rnd()*(TILE-11), py=3+rnd()*(TILE-11); ctx.fillRect(px,py,4+rnd()*5,4+rnd()*5); }
+  ctx.fillStyle='#3aa957'; for(let i=0;i<5;i++){ const px=4+rnd()*(TILE-10), py=4+rnd()*(TILE-10); ctx.fillRect(px,py,3+rnd()*3,3+rnd()*3); }
+  ctx.fillStyle='rgba(0,0,0,.16)'; ctx.fillRect(0,0,TILE,TILE); ctx.restore(); }
 
 function drawBase(){ if(!game.base) return; const b=game.base, x=b.c*TILE, y=b.r*TILE, cx=x+TILE/2, cy=y+TILE/2;
   if(b.alive){ ctx.fillStyle='#1a1e26'; ctx.fillRect(x+3,y+3,TILE-6,TILE-6);
@@ -965,11 +1081,15 @@ function drawTank(t){ const h=C.TANK_SIZE/2;
   const g=ctx.createLinearGradient(0,-h,0,h); g.addColorStop(0,body); g.addColorStop(1,dark); ctx.fillStyle=g;
   roundRect(-h+3,-h+5,C.TANK_SIZE-6,C.TANK_SIZE-10,4); ctx.fill();
   ctx.fillStyle='rgba(255,255,255,.18)'; ctx.fillRect(-h+5,-h+7,C.TANK_SIZE-10,3);
+  // remaches del casco
+  ctx.fillStyle='rgba(0,0,0,.28)'; const rv=2; ctx.fillRect(-h+5,-h+8,rv,rv); ctx.fillRect(h-5-rv,-h+8,rv,rv); ctx.fillRect(-h+5,h-8-rv,rv,rv); ctx.fillRect(h-5-rv,h-8-rv,rv,rv);
   // torreta
   ctx.fillStyle=dark; ctx.beginPath(); ctx.arc(0,0,h*.45,0,Math.PI*2); ctx.fill();
   ctx.fillStyle=body; ctx.beginPath(); ctx.arc(0,0,h*.3,0,Math.PI*2); ctx.fill();
-  // cañón(es)
-  ctx.fillStyle='#e9edf2'; if(t.kind==='enemy'&&t.etype==='gunner'){ ctx.fillRect(0,-5,h+6,3.5); ctx.fillRect(0,1.5,h+6,3.5); } else { ctx.fillRect(0,-2.5,h+6,5); }
+  ctx.fillStyle='rgba(255,255,255,.25)'; ctx.beginPath(); ctx.arc(-h*.1,-h*.1,h*.12,0,Math.PI*2); ctx.fill();
+  // cañón(es) con boca
+  ctx.fillStyle='#e9edf2'; if(t.kind==='enemy'&&t.etype==='gunner'){ ctx.fillRect(0,-5,h+6,3.5); ctx.fillRect(0,1.5,h+6,3.5); ctx.fillStyle='#c2cad6'; ctx.fillRect(h+3,-5,3,3.5); ctx.fillRect(h+3,1.5,3,3.5); }
+  else { ctx.fillRect(0,-2.5,h+6,5); ctx.fillStyle='#c2cad6'; ctx.fillRect(h+3,-3,3,6); }
   // marca pesado
   if(t.kind==='enemy'&&t.etype==='heavy'){ ctx.strokeStyle='rgba(255,255,255,.5)'; ctx.lineWidth=1.5; ctx.strokeRect(-h+5,-h+7,C.TANK_SIZE-10,C.TANK_SIZE-14); }
   ctx.restore();
@@ -994,7 +1114,10 @@ function drawPowerups(){ const time=performance.now()/1000;
     roundRect(p.x-13,y-13,26,26,6); ctx.fill(); ctx.lineWidth=2.5; ctx.strokeStyle=conf.color; roundRect(p.x-13,y-13,26,26,6); ctx.stroke(); ctx.restore();
     ctx.fillStyle=conf.color; ctx.font='bold 17px "Courier New",monospace'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(conf.ch,p.x,y+1);
     if(p.life<3&&Math.floor(p.life*6)%2===0){ ctx.globalAlpha=.3; ctx.fillStyle='#000'; roundRect(p.x-13,y-13,26,26,6); ctx.fill(); ctx.globalAlpha=1; } } }
-function drawParticles(){ for(const p of particles){ ctx.globalAlpha=p.fade?Math.max(0,p.life/p.max):1; ctx.fillStyle=p.color; ctx.fillRect(p.x-p.size/2,p.y-p.size/2,p.size,p.size); } ctx.globalAlpha=1; }
+function drawParticles(){ for(const p of particles){
+    if(p.ring){ ctx.globalAlpha=Math.max(0,p.life/p.max); ctx.strokeStyle=p.color; ctx.lineWidth=3;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.stroke(); continue; }
+    ctx.globalAlpha=p.fade?Math.max(0,p.life/p.max):1; ctx.fillStyle=p.color; ctx.fillRect(p.x-p.size/2,p.y-p.size/2,p.size,p.size); } ctx.globalAlpha=1; }
 function drawFloatTexts(){ ctx.textAlign='center'; ctx.textBaseline='middle';
   for(const f of floatTexts){ ctx.globalAlpha=Math.min(1,f.life); ctx.font='bold 13px "Courier New",monospace';
     ctx.fillStyle='rgba(0,0,0,.6)'; ctx.fillText(f.txt,f.x+1,f.y+1); ctx.fillStyle=f.color; ctx.fillText(f.txt,f.x,f.y); } ctx.globalAlpha=1; }
