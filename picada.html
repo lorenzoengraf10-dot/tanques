@@ -105,7 +105,7 @@
        onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'emojis',textContent:'🧀 🥩 🍷 🍺 🫓'}))">
   <div class="emojis" style="font-size:clamp(20px,4.5vw,30px)">🧀 🥩 🍷 🍺 🫓</div>
   <div class="prize">Jugá y ganá $2000 de descuento</div>
-  <p class="lead">Movés la tabla y atrapás quesos, fiambres, cerveza y vino que caen.
+  <p class="lead">Movés la tabla y atrapás las <b>picadas</b>, la cerveza y el vino que caen.
      Cuidado con las <b>piedras</b>. Tenés <b>60 segundos</b> para hacer el mayor puntaje.</p>
   <button class="btn play" id="playBtn">▶ Jugar</button>
   <div class="howto">
@@ -187,18 +187,17 @@ const CONFIG = {
 /* ============================================================
    Productos que caen (emoji + valor). Piedra = penaliza.
    ============================================================ */
-// Productos reales (fotos) + bebidas como emoji, según lo pedido.
+// Caen las TABLAS/PICADAS completas (fotos reales) + bebidas como emoji.
 const GOODS = [
-  {img:'queso',    pts:10}, {img:'salamin', pts:12}, {img:'fiambre', pts:10},
-  {img:'bondiola', pts:14}, {img:'salame',  pts:12},
-  {e:'🍷', pts:15}, {e:'🍺', pts:15}
+  {img:'tabla1', pts:15}, {img:'tabla2', pts:15}, {img:'tabla3', pts:15},
+  {e:'🍷', pts:10}, {e:'🍺', pts:10}
 ];
 const BOMB = {e:'🪨', pts:-15};
 
-// Precarga de las imágenes de productos (si falla alguna, ese ítem cae como emoji).
-const FALLBACK = {queso:'🧀', salamin:'🥩', fiambre:'🍖', bondiola:'🥓', salame:'🌭'};
+// Precarga de las tablas (si falla alguna, ese ítem cae como emoji de respaldo).
+const FALLBACK = {tabla1:'🧀', tabla2:'🥩', tabla3:'🧀'};
 const IMAGES = {};
-['queso','salamin','fiambre','bondiola','salame'].forEach(n=>{
+['tabla1','tabla2','tabla3'].forEach(n=>{
   const im = new Image(); im.src = 'img/'+n+'.png'; IMAGES[n] = im;
 });
 function imgReady(n){ const im=IMAGES[n]; return im && im.complete && im.naturalWidth>0; }
@@ -250,7 +249,7 @@ window.addEventListener('keyup', e=>{
 function spawn(){
   const bomb = Math.random() < Math.min(0.10 + elapsed*0.003, 0.22);
   const g = bomb ? BOMB : GOODS[(Math.random()*GOODS.length)|0];
-  const size = bomb ? 36 : (g.img ? 48 + Math.random()*12 : 38 + Math.random()*8);
+  const size = bomb ? 36 : (g.img ? 60 + Math.random()*16 : 38 + Math.random()*8);
   items.push({
     x: 30 + Math.random()*(W-60), y: -40,
     vy: (120 + Math.random()*90) * (1 + elapsed*0.012),
@@ -324,8 +323,11 @@ function draw(){
     ctx.translate(it.x, it.y); ctx.rotate(it.rot);
     ctx.shadowColor='rgba(0,0,0,.4)'; ctx.shadowBlur=8; ctx.shadowOffsetY=4;
     if(it.img && imgReady(it.img)){
-      const s = it.size*1.5;
-      ctx.drawImage(IMAGES[it.img], -s/2, -s/2, s, s);
+      const im = IMAGES[it.img], s = it.size*1.6;
+      const ar = im.naturalWidth/im.naturalHeight;
+      let w = s, h = s;
+      if(ar >= 1) h = s/ar; else w = s*ar;   // respeta la forma (bandeja rectangular vs redonda)
+      ctx.drawImage(im, -w/2, -h/2, w, h);
     } else {
       const glyph = it.img ? FALLBACK[it.img] : it.e;
       ctx.font = (it.size*1.05)+'px serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
