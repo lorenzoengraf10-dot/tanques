@@ -19,6 +19,7 @@
     align-items:center;justify-content:center;gap:18px;text-align:center;padding:22px;overflow-y:auto;
     background:radial-gradient(ellipse at center,rgba(34,44,32,.82),rgba(20,28,18,.97));}
   .overlay.hidden{display:none;}
+  .hidden{display:none!important;}
   .brand{color:var(--dim);letter-spacing:.32em;font-size:clamp(9px,1.6vw,12px);text-transform:uppercase;margin:0;}
   .title{font-size:clamp(30px,7vw,64px);letter-spacing:.06em;font-weight:700;margin:0;color:var(--cream);
     text-shadow:0 3px 0 var(--wood2),0 0 14px rgba(240,200,72,.25);line-height:1.02;}
@@ -28,6 +29,10 @@
     box-shadow:0 6px 0 #a7801f,0 10px 22px rgba(0,0,0,.4);text-transform:uppercase;}
   .lead{color:#d6e0cc;font-size:clamp(13px,2.4vw,16px);letter-spacing:.03em;max-width:560px;line-height:1.5;margin:0;}
   .emojis{font-size:clamp(26px,6vw,44px);letter-spacing:.1em;filter:drop-shadow(0 4px 6px rgba(0,0,0,.4));}
+  .hero{width:clamp(150px,42vw,220px);height:auto;border-radius:50%;
+    filter:drop-shadow(0 10px 26px rgba(0,0,0,.55));animation:float 3.4s ease-in-out infinite;}
+  .hero.sm{width:clamp(110px,30vw,150px);}
+  @keyframes float{50%{transform:translateY(-9px);}}
   .btn{font-family:inherit;cursor:pointer;border:none;border-radius:12px;padding:15px 34px;font-size:16px;
     letter-spacing:.06em;text-transform:uppercase;font-weight:700;transition:.12s;}
   .btn.play{background:linear-gradient(180deg,var(--green),#63b78d);color:#123024;
@@ -96,7 +101,9 @@
 <div id="startScreen" class="overlay">
   <p class="brand">Productos Patagónicos</p>
   <h1 class="title">Atrapá la <span class="g">Picada</span></h1>
-  <div class="emojis">🧀 🥩 🍷 🍺 🫓</div>
+  <img class="hero" src="img/picada.png" alt="Picada Productos Patagónicos"
+       onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'emojis',textContent:'🧀 🥩 🍷 🍺 🫓'}))">
+  <div class="emojis" style="font-size:clamp(20px,4.5vw,30px)">🧀 🥩 🍷 🍺 🫓</div>
   <div class="prize">Jugá y ganá $2000 de descuento</div>
   <p class="lead">Movés la tabla y atrapás quesos, fiambres, cerveza y vino que caen.
      Cuidado con las <b>piedras</b>. Tenés <b>60 segundos</b> para hacer el mayor puntaje.</p>
@@ -136,7 +143,8 @@
       <button class="btn play" id="unlockBtn">Desbloquear cupón</button>
     </div>
     <!-- coupon -->
-    <div id="stepCoupon" class="hidden" style="display:flex;flex-direction:column;gap:14px;">
+    <div id="stepCoupon" class="hidden" style="display:flex;flex-direction:column;gap:14px;align-items:center;">
+      <img class="hero sm" src="img/picada.png" alt="Picada" onerror="this.remove()">
       <h2 class="gate-h">🎉 ¡Listo! Tu cupón es:</h2>
       <div class="coupon">
         <span class="cap">Código de descuento</span>
@@ -151,7 +159,13 @@
   <button class="btn ghost" id="replayBtn">↺ Jugar de nuevo</button>
 </div>
 
-<div class="footer">Productos Patagónicos · Quesos · Fiambres · Picadas · Cerveza · Vino</div>
+<div class="footer" id="brandFooter">
+  <b style="color:#c7d3ba;letter-spacing:.2em;">PRODUCTOS PATAGÓNICOS</b>
+  &nbsp;·&nbsp; <a href="https://instagram.com/productos.patagonicos_" target="_blank" rel="noopener"
+      style="color:#8fd3b0;text-decoration:none;">@productos.patagonicos_</a>
+  &nbsp;·&nbsp; <a href="https://wa.me/542920347453" target="_blank" rel="noopener"
+      style="color:#8fd3b0;text-decoration:none;">WhatsApp 2920 34-7453</a>
+</div>
 
 <script>
 /* ============================================================
@@ -173,11 +187,21 @@ const CONFIG = {
 /* ============================================================
    Productos que caen (emoji + valor). Piedra = penaliza.
    ============================================================ */
+// Productos reales (fotos) + bebidas como emoji, según lo pedido.
 const GOODS = [
-  {e:'🧀', pts:10}, {e:'🥩', pts:10}, {e:'🫓', pts:10}, {e:'🥖', pts:8},
-  {e:'🍷', pts:15}, {e:'🍺', pts:15}, {e:'🫒', pts:8},  {e:'🧺', pts:20}
+  {img:'queso',    pts:10}, {img:'salamin', pts:12}, {img:'fiambre', pts:10},
+  {img:'bondiola', pts:14}, {img:'salame',  pts:12},
+  {e:'🍷', pts:15}, {e:'🍺', pts:15}
 ];
 const BOMB = {e:'🪨', pts:-15};
+
+// Precarga de las imágenes de productos (si falla alguna, ese ítem cae como emoji).
+const FALLBACK = {queso:'🧀', salamin:'🥩', fiambre:'🍖', bondiola:'🥓', salame:'🌭'};
+const IMAGES = {};
+['queso','salamin','fiambre','bondiola','salame'].forEach(n=>{
+  const im = new Image(); im.src = 'img/'+n+'.png'; IMAGES[n] = im;
+});
+function imgReady(n){ const im=IMAGES[n]; return im && im.complete && im.naturalWidth>0; }
 
 /* ============================================================
    Canvas + estado
@@ -226,12 +250,12 @@ window.addEventListener('keyup', e=>{
 function spawn(){
   const bomb = Math.random() < Math.min(0.10 + elapsed*0.003, 0.22);
   const g = bomb ? BOMB : GOODS[(Math.random()*GOODS.length)|0];
-  const size = bomb ? 34 : 30 + Math.random()*10;
+  const size = bomb ? 36 : (g.img ? 48 + Math.random()*12 : 38 + Math.random()*8);
   items.push({
     x: 30 + Math.random()*(W-60), y: -40,
     vy: (120 + Math.random()*90) * (1 + elapsed*0.012),
-    rot: (Math.random()-0.5)*0.6, vr:(Math.random()-0.5)*2,
-    e:g.e, pts:g.pts, size, bomb, dead:false
+    rot: (Math.random()-0.5)*0.5, vr:(Math.random()-0.5)*1.4,
+    e:g.e, img:g.img, pts:g.pts, size, bomb, dead:false
   });
 }
 function burst(x,y,color,n){
@@ -298,9 +322,15 @@ function draw(){
   for(const it of items){
     ctx.save();
     ctx.translate(it.x, it.y); ctx.rotate(it.rot);
-    ctx.font = it.size+'px serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.shadowColor='rgba(0,0,0,.35)'; ctx.shadowBlur=6; ctx.shadowOffsetY=3;
-    ctx.fillText(it.e, 0, 0);
+    ctx.shadowColor='rgba(0,0,0,.4)'; ctx.shadowBlur=8; ctx.shadowOffsetY=4;
+    if(it.img && imgReady(it.img)){
+      const s = it.size*1.5;
+      ctx.drawImage(IMAGES[it.img], -s/2, -s/2, s, s);
+    } else {
+      const glyph = it.img ? FALLBACK[it.img] : it.e;
+      ctx.font = (it.size*1.05)+'px serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(glyph, 0, 0);
+    }
     ctx.restore();
   }
 
@@ -364,11 +394,13 @@ function startGame(){
   board.x = W/2; board.targetX = W/2;
   hide('startScreen'); hide('endScreen');
   document.getElementById('hud').classList.add('show');
+  document.getElementById('brandFooter').style.display='none';
 }
 
 function endGame(){
   state='ended';
   document.getElementById('hud').classList.remove('show');
+  document.getElementById('brandFooter').style.display='';
   document.getElementById('finalScore').textContent = score;
   document.getElementById('resultMsg').textContent =
     score>=250 ? '¡Sos un crack de la picada! 🧀🏆' :
