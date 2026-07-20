@@ -6,8 +6,8 @@
 <title>Batalla de Tanques — Arcade</title>
 <style>
   :root{
-    --bg:#242737; --neon:#8fd3b0; --neon2:#8fbcd8; --gold:#e6c079;
-    --p1:#8fd3b0; --p2:#e6c079; --dim:#8a92a3; --panel:rgba(42,46,62,.95);
+    --bg:#242737; --neon:#8fd3b0; --neon2:#4d94db; --gold:#f0c848;
+    --p1:#f0c848; --p2:#4d94db; --dim:#8a92a3; --panel:rgba(42,46,62,.95);
   }
   *{box-sizing:border-box;}
   html,body{height:100%;margin:0;background:var(--bg);color:#e8ecf2;
@@ -41,7 +41,7 @@
   .btn.ghost{background:#131a28;color:#aab4c2;border:1px solid #2a3444;}
   .btn.ghost:hover{color:#fff;border-color:#3a4658;}
   .controls-help{display:flex;gap:30px;flex-wrap:wrap;justify-content:center;color:var(--dim);font-size:11px;letter-spacing:.05em;}
-  .controls-help b{color:var(--p1);} .controls-help .j2 b{color:var(--gold);}
+  .controls-help b{color:var(--p1);} .controls-help .j2 b{color:var(--neon2);}
   .powhint{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;max-width:680px;font-size:11px;color:#7c8695;}
   .powhint .k{display:inline-flex;align-items:center;gap:5px;}
   .powhint .k i{width:16px;height:16px;border-radius:4px;display:inline-block;font-style:normal;
@@ -343,10 +343,10 @@ const CONFIG = {
 
   // Tipos de tanques enemigos (modo Oleadas)
   ENEMY_TYPES:{
-    basic: {hp:1, speedMul:1.00, fireMul:1.0, bulletMul:1.00, color:'#b8c0cc', dark:'#5e6672', points:100, name:'Básico'},
-    fast:  {hp:1, speedMul:1.75, fireMul:1.0, bulletMul:1.25, color:'#8fbcd8', dark:'#4a6f88', points:200, name:'Rápido'},
-    gunner:{hp:2, speedMul:1.05, fireMul:2.3, bulletMul:1.55, color:'#dd9a7a', dark:'#8a5238', points:300, name:'Artillero'},
-    heavy: {hp:2, speedMul:0.62, fireMul:0.9, bulletMul:1.00, color:'#a7c98a', dark:'#5a7346', points:400, name:'Pesado'}
+    basic: {hp:1, speedMul:1.00, fireMul:1.0, bulletMul:1.00, color:'#aeb6c1', dark:'#5c6470', points:100, name:'Básico'},
+    fast:  {hp:1, speedMul:1.75, fireMul:1.0, bulletMul:1.25, color:'#e8a24d', dark:'#9a5f1f', points:200, name:'Rápido'},
+    gunner:{hp:2, speedMul:1.05, fireMul:2.3, bulletMul:1.55, color:'#e05a4d', dark:'#8f2f26', points:300, name:'Artillero'},
+    heavy: {hp:2, speedMul:0.62, fireMul:0.9, bulletMul:1.00, color:'#7cbf4e', dark:'#3f6b23', points:400, name:'Pesado'}
   },
 
   // Ajustes del modo Oleadas
@@ -377,8 +377,8 @@ const CONFIG = {
     fortify:{ch:'M',color:'#a7b4c4',dur:10, desc:'Fortifica base'}
   },
 
-  P1_COLOR:'#8fd3b0', P1_DARK:'#4f8f72',
-  P2_COLOR:'#e6c079', P2_DARK:'#9c8038',
+  P1_COLOR:'#f0c848', P1_DARK:'#a07d1c',
+  P2_COLOR:'#4d94db', P2_DARK:'#265d94',
   SOUND:true
 };
 
@@ -1052,9 +1052,9 @@ function render(){ ctx.setTransform(view.dpr,0,0,view.dpr,0,0); ensureGradients(
 const GRAD={steel:null,water:null,arena:null};
 function ensureGradients(){ if(GRAD.steel) return;
   GRAD.steel=ctx.createLinearGradient(0,0,TILE,TILE);
-  GRAD.steel.addColorStop(0,'#aab2be'); GRAD.steel.addColorStop(.5,'#727a86'); GRAD.steel.addColorStop(1,'#4c525d');
+  GRAD.steel.addColorStop(0,'#b3bcc7'); GRAD.steel.addColorStop(.5,'#79828f'); GRAD.steel.addColorStop(1,'#515863');
   GRAD.water=ctx.createLinearGradient(0,0,0,TILE);
-  GRAD.water.addColorStop(0,'#4a7896'); GRAD.water.addColorStop(1,'#365a72');
+  GRAD.water.addColorStop(0,'#3b74ac'); GRAD.water.addColorStop(1,'#2a557f');
   GRAD.arena=ctx.createRadialGradient(ARENA_W/2,ARENA_H/2,ARENA_H*0.2,ARENA_W/2,ARENA_H/2,ARENA_H*0.75);
   GRAD.arena.addColorStop(0,'#2e3243'); GRAD.arena.addColorStop(1,'#242737'); }
 function drawArenaBg(){ ctx.fillStyle=GRAD.arena; ctx.fillRect(0,0,ARENA_W,ARENA_H);
@@ -1065,9 +1065,10 @@ function drawTiles(bushPass){ const time=performance.now()/1000;
   for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++){ const cell=grid[r][c], x=c*TILE, y=r*TILE;
     if(bushPass){ if(cell.t==='T') drawBush(x,y); continue; }
     if(cell.t==='B') drawBrick(x,y,cell); else if(cell.t==='S') drawSteel(x,y); else if(cell.t==='W') drawWater(x,y,time,r,c); } }
-function drawBrickQuad(x,y,w){ ctx.fillStyle='#8f5140'; ctx.fillRect(x,y,w,w);
-  ctx.fillStyle='#a5695a'; const bh=w/2, bw=w; ctx.fillRect(x+1,y+1,bw-2,bh-2); ctx.fillRect(x+1,y+bh+1,bw-2,bh-2);
-  ctx.strokeStyle='rgba(0,0,0,.26)'; ctx.lineWidth=1; ctx.strokeRect(x+.5,y+.5,w-1,w-1); }
+function drawBrickQuad(x,y,w){ ctx.fillStyle='#a5741f'; ctx.fillRect(x,y,w,w);
+  ctx.fillStyle='#d0a044'; const bh=w/2, bw=w; ctx.fillRect(x+1,y+1,bw-2,bh-2); ctx.fillRect(x+1,y+bh+1,bw-2,bh-2);
+  ctx.fillStyle='rgba(255,255,255,.14)'; ctx.fillRect(x+1,y+1,bw-2,2);
+  ctx.strokeStyle='rgba(60,38,6,.5)'; ctx.lineWidth=1; ctx.strokeRect(x+.5,y+.5,w-1,w-1); }
 function drawBrick(x,y,cell){ const s=cell.sub, h=TILE/2;
   if(s[0]) drawBrickQuad(x,y,h); if(s[1]) drawBrickQuad(x+h,y,h); if(s[2]) drawBrickQuad(x,y+h,h); if(s[3]) drawBrickQuad(x+h,y+h,h); }
 function drawSteel(x,y){ ctx.save(); ctx.translate(x,y);
@@ -1087,11 +1088,11 @@ function drawWater(x,y,time,r,c){ ctx.save(); ctx.translate(x,y);
 function tileRand(a,b){ let h=(((a+7)*73856093)^((b+11)*19349663))>>>0;
   return ()=>{ h=(h*1664525+1013904223)>>>0; return h/4294967296; }; }
 function drawBush(x,y){ ctx.save(); ctx.translate(x,y);
-  ctx.fillStyle='#4a7a58'; ctx.fillRect(0,0,TILE,TILE);
+  ctx.fillStyle='#2f5f38'; ctx.fillRect(0,0,TILE,TILE);
   const rnd=tileRand((x/TILE)|0,(y/TILE)|0);
-  ctx.fillStyle='#5f9169'; for(let i=0;i<8;i++){ const px=3+rnd()*(TILE-11), py=3+rnd()*(TILE-11); ctx.fillRect(px,py,4+rnd()*5,4+rnd()*5); }
-  ctx.fillStyle='#72a67c'; for(let i=0;i<5;i++){ const px=4+rnd()*(TILE-10), py=4+rnd()*(TILE-10); ctx.fillRect(px,py,3+rnd()*3,3+rnd()*3); }
-  ctx.fillStyle='rgba(0,0,0,.14)'; ctx.fillRect(0,0,TILE,TILE); ctx.restore(); }
+  const blob=(col,n,rmin,rmax)=>{ ctx.fillStyle=col; for(let i=0;i<n;i++){ const cx=6+rnd()*(TILE-12), cy=6+rnd()*(TILE-12), r=rmin+rnd()*(rmax-rmin); ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.fill(); } };
+  blob('#3d7a49',5,6,9); blob('#4f9a5c',5,4,7); blob('#63b571',4,2,4);
+  ctx.fillStyle='rgba(0,0,0,.12)'; ctx.fillRect(0,0,TILE,TILE); ctx.restore(); }
 
 function drawBase(){ if(!game.base) return; const b=game.base, x=b.c*TILE, y=b.r*TILE, cx=x+TILE/2, cy=y+TILE/2;
   if(b.alive){ ctx.fillStyle='#1a1e26'; ctx.fillRect(x+3,y+3,TILE-6,TILE-6);
