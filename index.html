@@ -48,15 +48,43 @@
   .btn.ghost:hover{color:#fff;border-color:#3a4658;}
   .controls-help{display:flex;gap:30px;flex-wrap:wrap;justify-content:center;color:var(--dim);font-size:11px;letter-spacing:.05em;}
   .controls-help b{color:var(--p1);} .controls-help .j2 b{color:var(--neon2);}
-  .powhint{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;max-width:680px;font-size:11px;color:#7c8695;}
+  .powhint{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;max-width:680px;font-size:11px;color:#9aa4b2;}
   .powhint .k{display:inline-flex;align-items:center;gap:5px;}
   .powhint .k i{width:16px;height:16px;border-radius:4px;display:inline-block;font-style:normal;
     text-align:center;line-height:16px;font-weight:700;font-size:11px;color:#06110c;}
   .msg-big{font-size:clamp(24px,4.5vw,50px);letter-spacing:.06em;font-weight:700;margin:0;text-shadow:0 0 14px rgba(143,211,176,.28);}
   .msg-sub{color:var(--dim);letter-spacing:.12em;font-size:13px;text-transform:uppercase;}
   .hidden{display:none!important;}
-  .footer{position:fixed;bottom:8px;left:0;right:0;text-align:center;color:#39424f;font-size:11px;letter-spacing:.08em;z-index:4;}
+  .footer{position:fixed;bottom:8px;left:0;right:0;text-align:center;color:#4a5361;font-size:11px;letter-spacing:.08em;z-index:4;}
   body.in-game .footer{display:none;}
+
+  /* ---------- Accesibilidad / foco / movimiento ---------- */
+  .btn:focus-visible, .seg button:focus-visible, .platbtn:focus-visible, .vol input:focus-visible{
+    outline:2px solid var(--neon); outline-offset:2px; }
+  @media (prefers-reduced-motion:reduce){
+    #touch .ability.ready{animation:none;}
+    .btn.play:hover{transform:none;}
+    .platbtn:hover,.platbtn:focus{transform:none;}
+  }
+
+  /* ---------- Volumen ---------- */
+  .vol{display:flex;align-items:center;gap:10px;}
+  .vol input[type="range"]{-webkit-appearance:none;appearance:none;width:130px;height:4px;border-radius:2px;
+    background:#2a3444;outline:none;cursor:pointer;}
+  .vol input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;
+    border-radius:50%;background:var(--neon);border:2px solid #173226;cursor:pointer;}
+  .vol input[type="range"]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--neon);
+    border:2px solid #173226;cursor:pointer;}
+  .vol span{color:#9aa6b5;font-size:11px;min-width:2.4em;text-align:right;}
+
+  /* ---------- Cómo jugar ---------- */
+  .help-body{display:flex;flex-direction:column;gap:14px;width:min(680px,94vw);max-height:min(64vh,560px);
+    overflow-y:auto;background:var(--panel);border:1px solid #1b2431;border-radius:14px;padding:20px 22px;
+    box-shadow:0 20px 60px rgba(0,0,0,.55);text-align:left;}
+  .help-sec>b{display:block;color:var(--neon);letter-spacing:.08em;font-size:12px;text-transform:uppercase;margin-bottom:5px;}
+  .help-sec p{margin:0;color:#c3cad4;font-size:12.5px;line-height:1.65;}
+  .help-sec .tag{display:inline-block;font-size:9.5px;letter-spacing:.05em;color:#173226;background:var(--neon);
+    border-radius:4px;padding:1px 6px;margin-left:6px;text-transform:uppercase;vertical-align:1px;}
 
   /* ---------- Pantalla de dispositivo ---------- */
   .plat-q{font-size:clamp(16px,3vw,22px);color:#e8ecf2;letter-spacing:.08em;margin-top:2px;}
@@ -247,6 +275,7 @@
 
   <div class="actions">
     <button class="btn play" id="playBtn">Jugar ►</button>
+    <button class="btn ghost" id="helpBtn">❓ Cómo jugar</button>
     <button class="btn ghost" id="optionsBtn">⚙ Opciones</button>
     <button class="btn ghost" id="fsBtn">Pantalla completa</button>
     <button class="btn ghost" id="changePlat">◂ Cambiar dispositivo</button>
@@ -279,10 +308,48 @@
         <button data-val="off">No</button>
       </div>
     </div>
+    <div class="row">
+      <span class="lbl">Volumen</span>
+      <div class="vol"><input type="range" id="volSlider" min="0" max="100" value="26"><span id="volLabel">26%</span></div>
+    </div>
   </div>
-  <div class="controls-help" style="color:#7c8695">El auto-disparo hace que dispares solo. Por defecto está en <b>No</b>: usás el botón FUEGO.</div>
+  <div class="controls-help tc-only" style="color:#9aa4b2">El auto-disparo hace que dispares solo. Por defecto está en <b>No</b>: usás el botón FUEGO.</div>
   <div class="actions">
     <button class="btn play" id="optBack">Volver</button>
+  </div>
+</div>
+
+<!-- ===================== CÓMO JUGAR ===================== -->
+<div id="helpScreen" class="overlay hidden">
+  <h2 class="msg-big">Cómo jugar</h2>
+  <div class="help-body">
+    <div class="help-sec">
+      <b>Objetivo</b>
+      <p><b style="color:#e8ecf2">Versus</b>: destruí al rival más veces que él a vos, a lo largo de un torneo (mejor de 3/5/7 rondas). <b style="color:#e8ecf2">Oleadas</b>: sobrevivís junto al equipo defendiendo la base (el águila) de oleadas cada vez más grandes de enemigos.</p>
+    </div>
+    <div class="help-sec">
+      <b>Controles en PC</b>
+      <p><b style="color:var(--p1)">Jugador 1</b>: mover W A S D, disparar Espacio. <b style="color:var(--neon2)">Jugador 2</b>: mover ← ↑ → ↓, disparar Enter. También se puede usar un mando (elegilo en Opciones de cada jugador). <b>P</b> o <b>Esc</b> pausan.</p>
+    </div>
+    <div class="help-sec">
+      <b>Controles en celular <span class="tag">celular</span></b>
+      <p>D-pad para moverte y botón <b style="color:#e8ecf2">FUEGO</b> para disparar (o activá auto-disparo en Opciones). El botón <b style="color:var(--neon)">⚡</b> se carga matando 5 enemigos y activa la habilidad <b style="color:#e8ecf2">Sobrecarga</b>: un efecto aleatorio (escudo, disparo rápido y triple, velocidad, congelar enemigos, una bomba, o volver la base inmune por 10 segundos).</p>
+    </div>
+    <div class="help-sec">
+      <b>Power-ups del mapa</b>
+      <p>Aparecen solos sobre el tablero. Recogelos pasando por encima: <b style="color:#8fc9e0">S</b> Escudo, <b style="color:#8fd3a0">+</b> vida extra, <b style="color:#e6c574">R</b> disparo rápido, <b style="color:#e0a56a">3</b> disparo triple, <b style="color:#bfa0e0">V</b> veloz, <b style="color:#e08a8a">P</b> perforante, <b style="color:#c2e0ef">F</b> congela al rival.</p>
+    </div>
+    <div class="help-sec">
+      <b>Tanques portadores <span class="tag">oleadas</span></b>
+      <p>En Oleadas, algunos enemigos parpadean en rojo: son "portadores". Al destruirlos sueltan un power-up especial: <b style="color:#e6d089">★</b> mejora tu tanque (rápido + perforante), <b style="color:#e08a8a">B</b> bomba que destruye a todos los enemigos en pantalla, o <b style="color:#a7b4c4">M</b> fortifica la base con acero temporal.</p>
+    </div>
+    <div class="help-sec">
+      <b>La base <span class="tag">oleadas</span></b>
+      <p>Defendé el águila del centro del mapa: si un enemigo la destruye, se acaba la partida. Los ladrillos que la rodean se pueden reconstruir con el power-up <b style="color:#a7b4c4">M</b>, y en celular la habilidad Sobrecarga puede volverla inmune por unos segundos.</p>
+    </div>
+  </div>
+  <div class="actions">
+    <button class="btn play" id="helpBack">Volver</button>
   </div>
 </div>
 
@@ -473,7 +540,10 @@ let view={cssW:0,cssH:0,dpr:1,scale:1,ox:0,oy:0};
 
 let state='menu';   // menu, countdown, playing, paused, roundover, waveclear, matchover
 let grid=[], tanks=[], bullets=[], powerups=[], particles=[], floatTexts=[];
-let lastTime=0, countdown=0, countdownLabel='', transTimer=0, screenFlash=0;
+let lastTime=0, countdown=0, countdownLabel='', transTimer=0, screenFlash=0, shake=0;
+const REDUCED_MOTION = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+function triggerShake(mag){ if(REDUCED_MOTION) return; shake=Math.max(shake,mag); }
+function vibrate(pattern){ if(!isMobile()||!navigator.vibrate) return; try{ navigator.vibrate(pattern); }catch(e){} }
 
 // Estado de partida (ambos modos)
 const game={
@@ -481,12 +551,13 @@ const game={
   score:[0,0], winsNeeded:2,           // versus
   teamLives:0, teamScore:0,            // oleadas
   base:null, enemySpawns:[], waveQueue:[], spawnTimer:0,
-  playerDefs:[], mapOrder:[], powerupTimer:0, fortify:null, baseInvincible:0
+  playerDefs:[], mapOrder:[], powerupTimer:0, fortify:null, baseInvincible:0,
+  combo:0, comboTimer:0
 };
 
 const settings={gamemode:'versus', vsmode:'2p', players:'1', diff:'normal',
   speed:'normal', map:'0', bestof:'3', wavesCount:'5', maporder:'order',
-  p1ctrl:'kb', p2ctrl:'kb', autofire:'off', sound:'on'};
+  p1ctrl:'kb', p2ctrl:'kb', autofire:'off', sound:'on', volume:26};
 // settings.sound es la única fuente de verdad; C.SOUND se deriva de acá.
 Object.defineProperty(CONFIG,'SOUND',{get(){ return settings.sound==='on'; }});
 
@@ -498,12 +569,22 @@ const ability={kills:0, need:C.ABILITY_KILLS_NEEDED};
 /* ============================================================
    AUDIO
    ============================================================ */
-const AudioFX={ctx:null,master:null,
+const AudioFX={ctx:null,master:null,music:{playing:false,step:0,timer:null},
+  MUSIC_PATTERN:[110,0,130.81,0,146.83,0,164.81,0,196,0,164.81,146.83,130.81,0,110,0],
   init(){ if(!C.SOUND) return;
     if(this.ctx){ if(this.ctx.state==='suspended') this.ctx.resume().catch(()=>{}); return; }
     try{ const AC=window.AudioContext||window.webkitAudioContext; this.ctx=new AC();
-      this.master=this.ctx.createGain(); this.master.gain.value=0.26; this.master.connect(this.ctx.destination);
+      this.master=this.ctx.createGain(); this.master.gain.value=settings.volume/100; this.master.connect(this.ctx.destination);
     }catch(e){ this.ctx=null; } },
+  setVolume(pct){ settings.volume=pct; if(this.master) this.master.gain.value=pct/100; },
+  startMusic(){ if(this.music.playing||!this.ctx) return; this.music.playing=true; this.music.step=0; this._musicStep(); },
+  stopMusic(){ this.music.playing=false; if(this.music.timer){ clearTimeout(this.music.timer); this.music.timer=null; } },
+  _musicStep(){ if(!this.music.playing) return;
+    if(!C.SOUND){ this.music.playing=false; return; }
+    const f=this.MUSIC_PATTERN[this.music.step%this.MUSIC_PATTERN.length];
+    if(f>0) this.tone(f,0.16,'triangle',0.22);
+    this.music.step++;
+    this.music.timer=setTimeout(()=>this._musicStep(),150); },
   tone(f,d,type='square',vol=1,slide){ if(!this.ctx) return;
     const t=this.ctx.currentTime, o=this.ctx.createOscillator(), g=this.ctx.createGain();
     o.type=type; o.frequency.setValueAtTime(f,t);
@@ -608,7 +689,7 @@ function activateAbility(){ if(!isMobile()||state!=='playing'||ability.kills<abi
   else if(pick==='bomb'){ tanks.filter(o=>o.kind==='enemy').forEach(e=>killEnemy(e)); label='¡BOMBA!'; }
   else if(pick==='fortress'){ game.baseInvincible=10; label='BASE INMORTAL 10s'; }
   bullets=bullets.filter(b=>b.team!=='enemy');
-  ability.kills=0; screenFlash=.5; addFloat(t.x,t.y,'⚡ '+label,'#8fd3b0');
+  ability.kills=0; screenFlash=.5; triggerShake(6); vibrate([20,30,20]); addFloat(t.x,t.y,'⚡ '+label,'#8fd3b0');
   for(let i=0;i<C.FX_PARTICLES.ability;i++) particles.push({x:t.x,y:t.y,vx:rand(-200,200),vy:rand(-200,200),life:.6,max:.6,size:rand(2,5),color:'#8fd3b0',fade:true});
   particles.push({ring:true,x:t.x,y:t.y,life:.5,max:.5,r:10,color:'#8fd3b0'});
   if(C.SOUND){ AudioFX.pickup(); AudioFX.bigboom(); }
@@ -640,6 +721,11 @@ let optionsReturnTo='menu';
 document.getElementById('optionsBtn').addEventListener('click',()=>{ optionsReturnTo='menu'; hide('menu'); show('optionsScreen'); });
 document.getElementById('optionsFromPause').addEventListener('click',()=>{ optionsReturnTo='pause'; hide('pauseScreen'); show('optionsScreen'); });
 document.getElementById('optBack').addEventListener('click',()=>{ hide('optionsScreen'); show(optionsReturnTo==='pause'?'pauseScreen':'menu'); });
+document.getElementById('helpBtn').addEventListener('click',()=>{ hide('menu'); show('helpScreen'); });
+document.getElementById('helpBack').addEventListener('click',()=>{ hide('helpScreen'); show('menu'); });
+const volSlider=document.getElementById('volSlider'), volLabel=document.getElementById('volLabel');
+volSlider.value=settings.volume; volLabel.textContent=settings.volume+'%';
+volSlider.addEventListener('input',()=>{ const v=+volSlider.value; volLabel.textContent=v+'%'; AudioFX.setVolume(v); });
 (function initPlat(){ const hint=document.getElementById('platHint');
   if(IS_TOUCH){ document.getElementById('platMobile').classList.add('suggest');
     hint.textContent='📱 Detectamos una pantalla táctil — te recomendamos “Celular”.'; }
@@ -677,7 +763,8 @@ document.querySelectorAll('.seg').forEach(seg=>{ const key=seg.dataset.key;
   seg.querySelectorAll('button').forEach(btn=>{ btn.addEventListener('click',()=>{
     seg.querySelectorAll('button').forEach(b=>b.classList.remove('on')); btn.classList.add('on');
     settings[key]=btn.dataset.val;
-    if(key==='sound'&&C.SOUND) AudioFX.init();
+    if(key==='sound'){ if(C.SOUND){ AudioFX.init(); if(state==='playing'||state==='countdown'||state==='paused') AudioFX.startMusic(); }
+      else AudioFX.stopMusic(); }
     updateMenuVisibility();
   }); });
 });
@@ -690,7 +777,7 @@ document.getElementById('toMenuFromMatch').addEventListener('click',goToMenu);
 
 function show(id){ document.getElementById(id).classList.remove('hidden'); }
 function hide(id){ document.getElementById(id).classList.add('hidden'); }
-function goToMenu(){ state='menu'; show('menu'); hide('pauseScreen'); hide('matchScreen'); document.body.classList.remove('in-game'); }
+function goToMenu(){ state='menu'; show('menu'); hide('pauseScreen'); hide('matchScreen'); document.body.classList.remove('in-game'); AudioFX.stopMusic(); }
 function toggleFullscreen(){ if(!document.fullscreenElement){ const p=(document.documentElement.requestFullscreen||function(){}).call(document.documentElement); if(p&&p.catch) p.catch(()=>{}); }
   else{ const p=(document.exitFullscreen||function(){}).call(document); if(p&&p.catch) p.catch(()=>{}); } }
 function togglePause(){ if(!document.getElementById('optionsScreen').classList.contains('hidden')){
@@ -703,6 +790,7 @@ function togglePause(){ if(!document.getElementById('optionsScreen').classList.c
    ============================================================ */
 function startGame(){ hide('menu'); hide('matchScreen'); hide('pauseScreen');
   document.body.classList.add('in-game');
+  if(C.SOUND) AudioFX.startMusic();
   heldDirs[1]=[]; heldDirs[2]=[]; shootHeld[1]=false; shootHeld[2]=false;
   ability.kills=0;
   document.body.classList.toggle('tc-2p', isP2Human());
@@ -748,7 +836,7 @@ function startWaves(){ game.mode='waves'; game.teamScore=0;
 function startWave(n){ game.wave=n;
   const mapIdx=game.mapOrder[(n-1)%game.mapOrder.length]; game.currentMap=mapIdx;
   buildWaveLevel(MAPS[mapIdx]);
-  resetRoundState(C.POWERUP_INTERVAL+3); game.fortify=null; game.baseInvincible=0;
+  resetRoundState(C.POWERUP_INTERVAL+3); game.fortify=null; game.baseInvincible=0; game.combo=0; game.comboTimer=0;
   // (re)crear jugadores vivos en sus posiciones
   tanks=[];
   for(const d of game.playerDefs){ const t=makePlayer(d.player,d.sx,d.sy,d.dir,'player',d.color,d.dark,false,d.preset);
@@ -972,6 +1060,8 @@ function update(dt){
     pa.x+=pa.vx*dt; pa.y+=pa.vy*dt; pa.vx*=.92; pa.vy*=.92; pa.life-=dt; if(pa.life<=0) particles.splice(i,1); }
   for(let i=floatTexts.length-1;i>=0;i--){ const f=floatTexts[i]; f.y-=28*dt; f.life-=dt; if(f.life<=0) floatTexts.splice(i,1); }
   if(screenFlash>0) screenFlash-=dt*2.5;
+  if(shake>0) shake=Math.max(0,shake-dt*22);
+  if(game.mode==='waves'&&game.comboTimer>0){ game.comboTimer-=dt; if(game.comboTimer<=0) game.combo=0; }
 }
 
 function freeSpawnPoints(){ return game.enemySpawns.filter(sp=>!tanks.some(t=>Math.abs(t.x-(sp.c+.5)*TILE)<TILE&&Math.abs(t.y-(sp.r+.5)*TILE)<TILE)); }
@@ -999,20 +1089,24 @@ function updateFortify(dt){ if(!game.fortify) return; game.fortify.timer-=dt;
 /* ---------- daños ---------- */
 function hitTank(t,b){ if(t.kind==='enemy'){ t.hp-=1; if(t.hp<=0) killEnemy(t); else spark(t.x,t.y,'#fff'); return; }
   // jugador
-  explosion(t.x,t.y,t.color); if(C.SOUND) AudioFX.explosion();
+  explosion(t.x,t.y,t.color); if(C.SOUND) AudioFX.explosion(); triggerShake(7); vibrate(90);
   if(game.mode==='versus'){ t.lives-=1; if(t.lives>0) respawnPlayer(t); else versusRoundOver(t.player===1?2:1); }
   else { if(game.teamLives>0){ game.teamLives-=1; respawnPlayer(t); } else { removeTank(t); if(tanks.filter(x=>x.kind==='player').length===0) wavesGameOver(); } }
 }
 function respawnPlayer(t){ t.x=t.spawn.x; t.y=t.spawn.y; t.dir=t.spawn.dir; t.pow.shield=C.RESPAWN_SHIELD; t.spawnFlash=.6; t.frozen=0; t.hp=1; }
 function removeTank(t){ const i=tanks.indexOf(t); if(i>=0) tanks.splice(i,1); }
-function killEnemy(t){ explosion(t.x,t.y,t.color); if(C.SOUND) AudioFX.explosion();
+function killEnemy(t){ explosion(t.x,t.y,t.color); if(C.SOUND) AudioFX.explosion(); triggerShake(3); vibrate(12);
   if(isMobile()) ability.kills=Math.min(ability.need, ability.kills+1);
-  game.teamScore+=C.ENEMY_TYPES[t.etype].points; addFloat(t.x,t.y,'+'+C.ENEMY_TYPES[t.etype].points,'#e6d089');
+  game.combo = game.comboTimer>0 ? game.combo+1 : 1; game.comboTimer=1.4;
+  const pts=C.ENEMY_TYPES[t.etype].points; game.teamScore+=pts; addFloat(t.x,t.y,'+'+pts,'#e6d089');
+  if(game.combo>=2){ const bonus=Math.min(5,game.combo-1)*10; game.teamScore+=bonus;
+    addFloat(t.x,t.y-16,'COMBO x'+game.combo+'  +'+bonus,'#e08a8a'); }
   if(t.carrier) dropSpecial(t.x,t.y); removeTank(t);
   const alive=tanks.filter(x=>x.kind==='enemy').length; if(game.waveQueue.length===0&&alive===0) waveClear();
 }
 function destroyBase(){ if(!game.base||!game.base.alive) return; game.base.alive=false; grid[game.base.r][game.base.c]={t:'X'};
-  explosion((game.base.c+.5)*TILE,(game.base.r+.5)*TILE,'#e6c079'); screenFlash=1; if(C.SOUND) AudioFX.bigboom(); wavesGameOver(); }
+  explosion((game.base.c+.5)*TILE,(game.base.r+.5)*TILE,'#e6c079'); screenFlash=1; triggerShake(14); vibrate([60,40,60]);
+  if(C.SOUND) AudioFX.bigboom(); wavesGameOver(); }
 
 /* ---------- fin de oleada / partida ---------- */
 function waveClear(){ if(state!=='playing') return;
@@ -1028,7 +1122,7 @@ function wavesWin(){ state='matchover'; matchScreenShow('¡Base defendida! Ganas
 function wavesGameOver(){ if(state==='matchover') return; state='matchover';
   const reason = game.base&&!game.base.alive ? 'La base fue destruida' : 'Todos los tanques cayeron';
   matchScreenShow('Fin del juego', reason+'  ·  Oleada '+game.wave+'  ·  Puntaje '+game.teamScore, C.P2_COLOR); if(C.SOUND) AudioFX.lose(); }
-function matchScreenShow(msg,sub,color){ document.getElementById('matchMsg').textContent=msg;
+function matchScreenShow(msg,sub,color){ AudioFX.stopMusic(); document.getElementById('matchMsg').textContent=msg;
   document.getElementById('matchMsg').style.color=color||'#fff'; document.getElementById('matchScore').textContent=sub; show('matchScreen'); }
 
 /* ============================================================
@@ -1085,7 +1179,8 @@ window.addEventListener('resize',resize); document.addEventListener('fullscreenc
 function render(){ ctx.setTransform(view.dpr,0,0,view.dpr,0,0); ensureGradients(); ctx.clearRect(0,0,view.cssW,view.cssH);
   ctx.fillStyle='#1c1e2b'; ctx.fillRect(0,0,view.cssW,view.cssH);
   if(state==='menu') return;
-  ctx.save(); ctx.translate(view.ox,view.oy); ctx.scale(view.scale,view.scale);
+  const sx=shake>0?(Math.random()*2-1)*shake:0, sy=shake>0?(Math.random()*2-1)*shake:0;
+  ctx.save(); ctx.translate(view.ox+sx,view.oy+sy); ctx.scale(view.scale,view.scale);
   drawArenaBg(); drawTiles(false); drawBase(); drawPowerups(); drawBullets();
   for(const t of tanks) drawTank(t); drawParticles(); drawTiles(true); drawFloatTexts();
   ctx.restore();
